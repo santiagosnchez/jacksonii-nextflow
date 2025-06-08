@@ -16,8 +16,11 @@ process run_fasterq_dump {
 
     script:
     """
-    fasterq-dump --split-files ${sra_accession} -O ${output_dir}
-    gzip ${output_dir}/${sra_accession}_1.fastq
-    gzip ${output_dir}/${sra_accession}_2.fastq
+    if [ ! -f "${reads_dir}/${sra_accession}_1.fastq.gz" ] || [ ! -f "${reads_dir}/${sra_accession}_2.fastq.gz" ]; then
+        mkdir -p \$(readlink -f "${reads_dir}")
+        fasterq-dump --split-files "${sra_accession}" -O "${reads_dir}" && \
+        gzip -f "${reads_dir}/${sra_accession}_1.fastq" && \
+        gzip -f "${reads_dir}/${sra_accession}_2.fastq"
+    fi
     """
 }
