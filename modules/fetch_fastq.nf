@@ -6,11 +6,13 @@ process run_fasterq_dump {
 
     input:
     val sra_accession
+    path reads_dir
 
-    when:
 
     output:
-    tuple val(sra_accession), path("${params.reads}/${sra_accession}_1.fastq.gz"), path("${output_dir}/${sra_accession}_2.fastq.gz")
+    tuple val(sra_accession), 
+          path("${reads_dir}/${sra_accession}_1.fastq.gz"), 
+          path("${reads_dir}/${sra_accession}_2.fastq.gz")
 
     script:
     """
