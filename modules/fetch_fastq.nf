@@ -7,6 +7,7 @@ process run_fasterq_dump {
     input:
     val sra_accession
     path reads_dir
+    path tmp_dir
 
 
     output:
@@ -19,7 +20,11 @@ process run_fasterq_dump {
     mkdir -p \$(readlink -f ${reads_dir})
     MANIFEST_FILE=${reads_dir}/${sra_accession}__run_fasterq_dump__SUCCESS
     if [ ! -f \$MANIFEST_FILE ]; then
-        fasterq-dump --force --split-files ${sra_accession} -O ${reads_dir} && \
+        fasterq-dump \
+            --force \
+            --split-files ${sra_accession} \
+            --temp ${tmp_dir} \
+            -O ${reads_dir} && \
         gzip -f ${reads_dir}/${sra_accession}_1.fastq && \
         gzip -f ${reads_dir}/${sra_accession}_2.fastq && \
         echo "" > \$MANIFEST_FILE

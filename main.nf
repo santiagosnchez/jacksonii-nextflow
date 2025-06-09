@@ -24,6 +24,6 @@ workflow {
     println "Using absolute path for input file: ${input_from_sra}"
     get_sra_accessions(input_from_sra)
     reads_ch = get_sra_accessions.out.splitText().map { it.trim() }
-    run_fasterq_dump(reads_ch, params.reads_dir)
+    run_fasterq_dump(reads_ch, params.reads_dir, params.tmp_dir)
     
 }
