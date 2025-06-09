@@ -18,7 +18,7 @@ process run_fasterq_dump {
     script:
     """
     mkdir -p \$(readlink -f ${reads_dir})
-    MANIFEST_FILE=${reads_dir}/${sra_accession}__run_fasterq_dump__SUCCESS
+    MANIFEST_FILE=\$(readlink -f ${reads_dir}/${sra_accession}__run_fasterq_dump__SUCCESS)
     if [ ! -f \$MANIFEST_FILE ]; then
         fasterq-dump \
             --force \
