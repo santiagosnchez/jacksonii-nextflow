@@ -20,8 +20,10 @@ else {
 }
 
 workflow {
-    
-    sra_accession = 'SRR30172790'
 
-    run_fasterq_dump(sra_accession, params.reads_dir)
+    println "Using absolute path for input file: ${input_from_sra}"
+    get_sra_accessions(input_from_sra)
+    reads_ch = get_sra_accessions.out.splitText().map { it.trim() }
+    run_fasterq_dump(reads_ch, params.reads_dir)
+    
 }
