@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir -p ./.tmp
 nextflow -C nextflow.config run main.nf \
     --from_sra data/samples/test_SraRunTable.csv \
     -resume
