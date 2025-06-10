@@ -1,7 +1,7 @@
 nextflow.enable.dsl = 2
 
-include { run_fasterq_dump } from './modules/fetch_fastq.nf'
 include { get_sra_accessions } from './modules/samples.nf'
+include { run_fasterq_dump } from './modules/fetch.nf'
 
 def input_from_sra = file(params.from_sra) ?: null
 
