@@ -2,7 +2,7 @@ process run_fasterq_dump {
 
     container 'community.wave.seqera.io/library/sra-tools:3.2.1--2063130dadd340c5'
 
-    tag "reads: $sra_accession"
+    tag "fetch: $sra_accession"
 
     input:
     val sra_accession
@@ -27,5 +27,31 @@ process run_fasterq_dump {
 
     output:
     val sra_accession
+
+}
+
+process fetch_reference_genome {
+
+    container 'community.wave.seqera.io/library/bash_wget:27285e53874b2d1f'
+
+    tag "fetch: reference genome"
+
+    input:
+    val ref_genome_url
+    path genome_dir
+
+    script:
+    """
+    mkdir -p \$(readlink -f ${genome_dir})
+    REF_GENOME_FILE=\$(readlink -f ${genome_dir}/reference.fasta.gz)
+    if [ ! -f \$REF_GENOME_FILE ]; then
+        wget -O \$REF_GENOME_FILE "${ref_genome_url}" && \
+        echo "Reference genome downloaded to \$REF_GENOME_FILE"
+    fi
+    """
+
+    output:
+    val true, emit: ref_genome_downloaded
+    path "${genome_dir}/reference.fasta.gz", emit: ref_genome
 
 }
