@@ -2,7 +2,7 @@ process run_trimmomatic {
     
     container 'community.wave.seqera.io/library/trimmomatic:0.39--3e9f341707d971dc'
     
-    tag "reads: $sra_accession"
+    tag "fastq: $sra_accession"
     
     input:
     val sra_accession
