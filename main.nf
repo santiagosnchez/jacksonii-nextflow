@@ -38,5 +38,33 @@ workflow {
     // get reference genome and index it
     fetch_reference_genome(params.ref_genome_url, params.genome_dir)
     index_genome_bwa(fetch_reference_genome.out.ref_genome)
+    // align reads to the reference genome
+    run_bwa_mem_paired(
+        run_trimmomatic.out, 
+        params.fastq_dir, 
+        params.bam_dir, 
+        index_genome_bwa.out.indexed_ref_genome, 
+        params.threads
+    )
+    run_bwa_mem_single(
+        run_trimmomatic.out, 
+        params.fastq_dir, 
+        params.bam_dir, 
+        index_genome_bwa.out.indexed_ref_genome, 
+        params.threads
+    )
+    // merge BAM files
+    merge_bam_files(
+        run_bwa_mem_paired.out.align_paired_success && run_bwa_mem_single.out.align_single_success,
+        run_bwa_mem_paired.out.sra_accession, 
+        params.bam_dir, 
+        params.threads
+    )
+    // clean up FASTQ files
+    clear_fastq_reads(
+        merge_bam_files.out.merge_success,
+        merge_bam_files.out.sra_accession,
+        params.fastq_dir, 
+    )
     
 }
