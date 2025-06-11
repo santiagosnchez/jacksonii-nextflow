@@ -93,6 +93,12 @@ process merge_bam_files {
         samtools merge -@ $threads ${bam_dir}/${sra_accession}_merged.bam \
             ${bam_dir}/${sra_accession}_sorted_paired.bam \
             ${bam_dir}/${sra_accession}_sorted_unpaired.bam && \
+        samtools addreplacerg \
+            -r "ID:${sra_accession}" \
+            -r "SM:${sra_accession}" \
+            -o ${bam_dir}/${sra_accession}_merged.rg.bam \
+            ${bam_dir}/${sra_accession}_merged.bam
+        mv ${bam_dir}/${sra_accession}_merged.rg.bam ${bam_dir}/${sra_accession}_merged.bam && \
         samtools index ${bam_dir}/${sra_accession}_merged.bam && \
         rm -f ${bam_dir}/${sra_accession}_sorted_paired.bam && \
         rm -f ${bam_dir}/${sra_accession}_sorted_unpaired.bam && \
