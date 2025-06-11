@@ -5,7 +5,10 @@ include { run_fasterq_dump } from './modules/fetch.nf'
 include { fetch_reference_genome } from './modules/fetch.nf'
 include { run_trimmomatic } from './modules/trim.nf'
 include { index_genome_bwa } from './modules/index.nf'
-// include { run_bwa_mem } from './modules/align.nf'
+include { run_bwa_mem_paired } from './modules/align.nf'
+include { run_bwa_mem_single } from './modules/align.nf'
+include { merge_bam_files } from './modules/align.nf'
+include { clear_fastq_reads } from './modules/clean.nf'
 
 
 def input_from_sra = file(params.from_sra) ?: null
