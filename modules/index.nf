@@ -17,5 +17,6 @@ process index_genome_bwa {
 
     output:
     val true, emit: index_success
+    path ref_genome, emit: indexed_ref_genome
 
 }
