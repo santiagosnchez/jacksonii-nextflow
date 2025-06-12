@@ -11,3 +11,6 @@ report-*
 trace-*
 dag.dot
 timeline.html
+
+# filesystem clutter
+*.DS_Store
