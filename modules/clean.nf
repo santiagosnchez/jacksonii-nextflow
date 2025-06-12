@@ -12,7 +12,10 @@ process clear_fastq_reads {
 
     script:
     """
-    rm -f ${fastq_dir}/${sra_accession}_*.fastq.gz
+    if [ -f ${fastq_dir}/${sra_accession}_1.trimmed.fastq.gz ]; then
+        rm -f ${fastq_dir}/${sra_accession}_*.fastq.gz
+    fi
+    
     """
 
 }
