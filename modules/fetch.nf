@@ -57,3 +57,29 @@ process fetch_reference_genome {
     path "${genome_dir}/reference.fasta.gz", emit: ref_genome_gz
 
 }
+
+process bgzip_reference_genome {
+
+    container 'community.wave.seqera.io/library/tabix_bgzip:4bcac8b3f831d53f'
+
+    tag "bgzip: reference genome"
+
+    input:
+    path ref_genome
+    path ref_genome_gz
+
+    when:
+
+    script:
+    """
+    if [ ! -f \$(readlink -f ${ref_genome}.bgzip__SUCCESS) ]; then
+        bgzip -c ${ref_genome} > ${ref_genome_gz} && \
+        echo "" > \$(readlink -f ${ref_genome}).bgzip__SUCCESS
+    fi
+    """
+
+    output:
+    val true, emit: bgzip_success
+    path "${ref_genome_gz}", emit: ref_genome_gz
+
+}
