@@ -43,15 +43,17 @@ process fetch_reference_genome {
     script:
     """
     mkdir -p \$(readlink -f ${genome_dir})
-    REF_GENOME_FILE=\$(readlink -f ${genome_dir}/reference.fasta.gz)
+    REF_GENOME_FILE=\$(readlink -f ${genome_dir}/reference.fasta)
     if [ ! -f \$REF_GENOME_FILE ]; then
-        wget -O \$REF_GENOME_FILE "${ref_genome_url}" && \
+        wget -O \$REF_GENOME_FILE.gz "${ref_genome_url}" && \
+        gzip -dc \$REF_GENOME_FILE.gz > \$REF_GENOME_FILE && \
         echo "Reference genome downloaded to \$REF_GENOME_FILE"
     fi
     """
 
     output:
     val true, emit: ref_genome_downloaded
-    path "${genome_dir}/reference.fasta.gz", emit: ref_genome
+    path "${genome_dir}/reference.fasta", emit: ref_genome
+    path "${genome_dir}/reference.fasta.gz", emit: ref_genome_gz
 
 }
