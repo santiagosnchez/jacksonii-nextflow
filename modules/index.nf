@@ -9,7 +9,7 @@ process index_genome_bwa {
 
     script:
     """
-    if [ ! -f ${params.genome_dir}/${ref_genome}.bwt.2bit.64 ]; then
+    if [ ! -f \$(readlink -f ${ref_genome}).bwt.2bit.64 ]; then
         bwa-mem2 index ${ref_genome} && \
         mv reference.fasta.gz.* ${params.genome_dir}/
     fi
