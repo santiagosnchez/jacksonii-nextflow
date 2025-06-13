@@ -14,7 +14,7 @@ process call_variants {
     """
     mkdir -p \$(readlink -f ${var_dir})
     ln -s "${params.genome_dir}/${ref_genome}.fai" .
-    if [[ ! -f ${var_dir}/call_variants__SUCCESS ]]; then
+    if [[ ! -f ${var_dir}/raw_genotype_calls__SUCCESS ]]; then
         freebayes \
             -f ${ref_genome} \
             --populations ${populations_file} \
@@ -27,7 +27,7 @@ process call_variants {
             ${bam_files} | \
         bcftools view -Oz -o ${var_dir}/raw_genotype_calls.vcf.gz && \
         bcftools index -t ${var_dir}/raw_genotype_calls.vcf.gz && \
-        echo "" > ${var_dir}/call_variants__SUCCESS
+        echo "" > ${var_dir}/raw_genotype_calls__SUCCESS
     fi
     """
 
