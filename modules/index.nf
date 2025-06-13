@@ -29,17 +29,22 @@ process index_genome_samtools {
 
     input:
     path ref_genome
+    path ref_genome_gz
 
     script:
     """
     if [ ! -f \$(readlink -f ${ref_genome}).fai ]; then
         samtools faidx ${ref_genome} && \
-        mv reference.fasta.gz.* ${params.genome_dir}/
+        mv reference.fasta.fai ${params.genome_dir}/
+    elif [ ! -f \$(readlink -f ${ref_genome_gz}).fai ]; then
+        samtools faidx ${ref_genome_gz} && \
+        mv reference.fasta.gz.fai ${params.genome_dir}/
     fi
     """
 
     output:
     val true, emit: index_success
     path "${ref_genome}", emit: indexed_ref_genome
+    path "${ref_genome_gz}", emit: indexed_ref_genome_gz
 
 }
