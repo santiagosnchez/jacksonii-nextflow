@@ -39,7 +39,10 @@ process get_populations {
     fi
     python -c '
 import pandas as pd
+import re
 df = pd.read_csv("${csv_file}")
+df["Organism"] = df["Organism"].apply(lambda x: re.sub("\s", "_", x))
+df["Organism"] = df["Organism"].apply(lambda x: re.sub("[^a-zA-Z0-9]", "", x))
 with open("${samples_dir}/populations.txt", "w") as f:
     f.write(df[["Run", "Organism"]].to_csv(index=False, header=False, sep="\t"))
 '
