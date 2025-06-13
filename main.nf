@@ -49,7 +49,10 @@ workflow {
         fetch_reference_genome.out.ref_genome_gz
     )
     index_genome_bwa(bgzip_reference_genome.out.ref_genome_gz)
-    index_genome_samtools(bgzip_reference_genome.out.ref_genome_gz)
+    index_genome_samtools(
+        fetch_reference_genome.out.ref_genome,
+        bgzip_reference_genome.out.ref_genome_gz
+    )
     // align reads to the reference genome
     run_bwa_mem_paired(
         run_trimmomatic.out, 
