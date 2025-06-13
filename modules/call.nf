@@ -24,7 +24,7 @@ process call_variants {
             --limit-coverage 100 \
             --use-reference-allele \
             --standard-filters \
-            $bam_files | \
+            ${bam_files} | \
         bcftools view -Oz -o ${var_dir}/raw_genotype_calls.vcf.gz && \
         bcftools index -t ${var_dir}/raw_genotype_calls.vcf.gz && \
         echo "" > ${var_dir}/call_variants__SUCCESS
