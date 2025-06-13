@@ -38,10 +38,6 @@ workflow {
     println "Using absolute path for input file: ${input_from_sra}"
     get_sra_accessions(input_from_sra)
     get_populations(input_from_sra, params.samples_dir)
-    // get fastq files from SRA
-    reads_ch = get_sra_accessions.out.splitText().map { it.trim() }
-    run_fasterq_dump(reads_ch, params.fastq_dir, params.tmp_dir)
-    run_trimmomatic(run_fasterq_dump.out, params.fastq_dir, params.threads)
     // get reference genome and index it
     fetch_reference_genome(params.ref_genome_url, params.genome_dir)
     bgzip_reference_genome(
@@ -53,6 +49,10 @@ workflow {
         fetch_reference_genome.out.ref_genome,
         bgzip_reference_genome.out.ref_genome_gz
     )
+    // get fastq files from SRA
+    reads_ch = get_sra_accessions.out.splitText().map { it.trim() }
+    run_fasterq_dump(reads_ch, params.fastq_dir, params.tmp_dir)
+    run_trimmomatic(run_fasterq_dump.out, params.fastq_dir, params.threads)
     // align reads to the reference genome
     run_bwa_mem_paired(
         run_trimmomatic.out, 
