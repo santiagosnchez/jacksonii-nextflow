@@ -34,8 +34,8 @@ process get_populations {
 
     script:
     """
-    if [ ! -d "${samples_dir}" ]; then
-        mkdir -p "${samples_dir}"
+    if [ ! -d \$(readlink -f ${samples_dir}) ]; then
+        mkdir -p \$(readlink -f ${samples_dir})
     fi
     python -c '
 import pandas as pd
