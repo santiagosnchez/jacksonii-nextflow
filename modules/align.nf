@@ -1,6 +1,6 @@
 process run_bwa_mem_paired {
 
-    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:a1d9819f899c2e07'
+    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:e1f420694f8e42bd'
 
     tag "align: $sra_accession"
 
@@ -37,7 +37,7 @@ process run_bwa_mem_paired {
 
 process run_bwa_mem_single {
 
-    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:a1d9819f899c2e07'
+    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:e1f420694f8e42bd'
 
     tag "align: $sra_accession"
 
@@ -74,7 +74,7 @@ process run_bwa_mem_single {
 
 process merge_bam_files {
 
-    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:a1d9819f899c2e07'
+    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:e1f420694f8e42bd'
 
     tag "align: $sra_accession"
 

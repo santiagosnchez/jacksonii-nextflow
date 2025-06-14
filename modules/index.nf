@@ -1,6 +1,6 @@
 process index_genome_bwa {
 
-    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:a1d9819f899c2e07'
+    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:e1f420694f8e42bd'
 
     tag "index: $ref_genome"
 
@@ -23,7 +23,7 @@ process index_genome_bwa {
 
 process index_genome_samtools {
 
-    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:a1d9819f899c2e07'
+    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:e1f420694f8e42bd'
 
     tag "index: $ref_genome"
 
