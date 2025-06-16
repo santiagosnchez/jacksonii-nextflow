@@ -14,9 +14,10 @@ process run_fasterq_dump {
     mkdir -p \$(readlink -f ${fastq_dir})
     MANIFEST_FILE=\$(readlink -f ${fastq_dir}/${sra_accession}__run_fasterq_dump__SUCCESS)
     if [ ! -f \$MANIFEST_FILE ]; then
+        prefetch --output-directory ${tmp_dir} ${sra_accession} && \
         fasterq-dump \
             --force \
-            --split-files ${sra_accession} \
+            --split-files ${tmp_dir}/${sra_accession} \
             --temp ${tmp_dir} \
             -O ${fastq_dir} && \
         gzip -f ${fastq_dir}/${sra_accession}_1.fastq && \
