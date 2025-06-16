@@ -1,6 +1,6 @@
 process run_trimmomatic {
     
-    container 'community.wave.seqera.io/library/trimmomatic:0.39--3e9f341707d971dc'
+    container 'community.wave.seqera.io/library/trimmomatic:0.39--a688969e471089d7'
     
     tag "fastq: $sra_accession"
     
