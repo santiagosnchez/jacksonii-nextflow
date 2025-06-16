@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export GID=$(id -g)
-[ -z "$UID" ] && export UID=$(id -u)
+export UID=$(id -u)
 
 mkdir -p ./.tmp
 mkdir -p ./data
