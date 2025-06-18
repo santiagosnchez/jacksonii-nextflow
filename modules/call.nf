@@ -4,6 +4,8 @@ process call_variants {
 
     tag "call_variants"
 
+    memory '10 GB'
+
     input:
     val bam_files
     path var_dir
