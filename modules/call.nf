@@ -33,7 +33,7 @@ process call_variants {
 
     output:
     val true, emit: call_variants_success
-    path "${var_dir}/raw_genotype_calls.vcf.gz", emit: raw_vcf
-    path "${var_dir}/raw_genotype_calls.vcf.gz.tbi", emit: raw_vcf_index
+    path "${var_dir}/raw_genotype_calls.vcf.gz", emit: raw_genotype_calls
+    path "${var_dir}/raw_genotype_calls.vcf.gz.tbi", emit: raw_genotype_calls_tbi
 
 }
