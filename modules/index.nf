@@ -33,18 +33,17 @@ process index_genome_samtools {
 
     script:
     """
-    if [ ! -f \$(readlink -f ${ref_genome}).fai ]; then
-        samtools faidx ${ref_genome} && \
-        mv reference.fasta.fai ${params.genome_dir}/
-    elif [ ! -f \$(readlink -f ${ref_genome_gz}).fai ]; then
-        samtools faidx ${ref_genome_gz} && \
-        mv reference.fasta.gz.fai ${params.genome_dir}/
-    fi
+    samtools faidx ${ref_genome}
+    samtools faidx ${ref_genome_gz}
     """
 
     output:
     val true, emit: index_success
     path "${ref_genome}", emit: indexed_ref_genome
     path "${ref_genome_gz}", emit: indexed_ref_genome_gz
+    path "reference.fasta.fai", emit: indexed_ref_genome_fai
+    path "reference.fasta.gz.fai", emit: indexed_ref_genome_gz_fai
+
+    publishDir "${params.genome_dir}", mode: 'copy'
 
 }
