@@ -18,11 +18,11 @@ process call_variants {
         freebayes \
             -f ${ref_genome} \
             --populations ${populations_file} \
-            --theta 0.005 \
+        --theta ${params.theta} \
             --min-alternate-count 5 \
+        --use-best-n-alleles 4 \
             --haplotype-length 0 \
             --limit-coverage 100 \
-            --use-reference-allele \
             --standard-filters \
             ${bam_files} | \
         bcftools view -Oz -o ${var_dir}/raw_genotype_calls.vcf.gz && \
