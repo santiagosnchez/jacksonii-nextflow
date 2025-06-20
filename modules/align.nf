@@ -89,7 +89,7 @@ process merge_bam_files {
 
     script:
     """
-    if [ ! -f ${bam_dir}/${sra_accession}__merge_bam_files__SUCCESS ]; then
+    if [[ ! -f ${params.bam_dir}/${sra_accession}__merge_bam_files__SUCCESS ]]; then
         samtools merge -f -@ $threads ${bam_dir}/${sra_accession}_merged.bam \
             ${bam_dir}/${sra_accession}_sorted_paired.bam \
             ${bam_dir}/${sra_accession}_sorted_unpaired.bam && \
@@ -104,7 +104,7 @@ process merge_bam_files {
         rm -f ${bam_dir}/${sra_accession}_sorted_unpaired.bam && \
         rm -f ${bam_dir}/${sra_accession}_paired.bam && \
         rm -f ${bam_dir}/${sra_accession}_unpaired.bam && \
-        echo "" > ${bam_dir}/${sra_accession}__merge_bam_files__SUCCESS
+        echo "" > ${params.bam_dir}/${sra_accession}__merge_bam_files__SUCCESS
     fi
     """
 
