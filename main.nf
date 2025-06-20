@@ -16,8 +16,7 @@ include { call_variants } from './modules/call.nf'
 
 
 def input_from_sra = file(params.from_sra) ?: null
-def bam_files = Channel.empty()
-def bam_files_str = null
+def raw_genotype_calls = Channel.empty()
 
 if (!input_from_sra) {
     error "Please provide a CSV file with SRA accessions using the --from_sra parameter."
@@ -82,13 +81,12 @@ workflow {
         params.fastq_dir, 
     )
     // call variants (this part is commented out in the original code)    
-    bam_files = merge_bam_files.out.bam_file
-    bam_files_str = bam_files.collect().map { it.join(' ') }
     call_variants(
-        bam_files_str, 
+        merge_bam_files.out.sra_accession, 
+        params.bam_dir, 
         params.var_dir, 
-        index_genome_samtools.out.indexed_ref_genome, 
-        get_populations.out.populations_file
+        index_genome_samtools.out.indexed_ref_genome
+    )
     )
 
 }
