@@ -11,9 +11,9 @@ process run_fasterq_dump {
 
     script:
     """
-    mkdir -p \$(readlink -f ${fastq_dir})
-    MANIFEST_FILE=\$(readlink -f ${fastq_dir}/${sra_accession}__run_fasterq_dump__SUCCESS)
-    if [ ! -f \$MANIFEST_FILE ]; then
+    mkdir -p ${params.fastq_dir}
+    MANIFEST_FILE=${params.fastq_dir}/${sra_accession}__run_fasterq_dump__SUCCESS
+    if [[ ! -f \$MANIFEST_FILE ]]; then
         prefetch --output-directory ${tmp_dir} ${sra_accession} && \
         fasterq-dump \
             --force \
@@ -43,9 +43,9 @@ process fetch_reference_genome {
 
     script:
     """
-    mkdir -p \$(readlink -f ${genome_dir})
-    REF_GENOME_FILE=\$(readlink -f ${genome_dir}/reference.fasta)
-    if [ ! -f \$REF_GENOME_FILE ]; then
+    mkdir -p ${params.genome_dir}
+    REF_GENOME_FILE=${params.genome_dir}/reference.fasta
+    if [[ ! -f \$REF_GENOME_FILE ]]; then
         wget -O \$REF_GENOME_FILE.gz "${ref_genome_url}" && \
         gzip -dc \$REF_GENOME_FILE.gz > \$REF_GENOME_FILE && \
         echo "Reference genome downloaded to \$REF_GENOME_FILE"
