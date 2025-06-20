@@ -13,10 +13,14 @@ include { run_bwa_mem_single } from './modules/align.nf'
 include { merge_bam_files } from './modules/align.nf'
 include { clear_fastq_reads } from './modules/clean.nf'
 include { call_variants } from './modules/call.nf'
+include { merge_variants } from './modules/call.nf'
+include { filter_variants } from './modules/filter.nf'
 
 
 def input_from_sra = file(params.from_sra) ?: null
 def raw_genotype_calls = Channel.empty()
+// def bam_files = Channel.empty()
+// def bam_files_str = null
 
 if (!input_from_sra) {
     error "Please provide a CSV file with SRA accessions using the --from_sra parameter."
@@ -87,6 +91,15 @@ workflow {
         params.var_dir, 
         index_genome_samtools.out.indexed_ref_genome
     )
+    raw_genotype_calls = call_variants.out.call_variants_success.collect()
+    merge_variants(
+        raw_genotype_calls,
+        params.var_dir,
+        params.genome_dir
+    )
+    filter_variants(
+        merge_variants.out.merge_variants_success,
+        params.var_dir
     )
 
 }
