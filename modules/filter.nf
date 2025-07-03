@@ -17,13 +17,17 @@ process filter_variants {
     if [[ ! -f ${var_dir}/filter_variants__SUCCESS ]]; then
         bcftools filter \
             --mode + \
-            --soft-filter 'F_MISSING_${params.min_fraction_missing}' \
-            -e 'INFO/F_MISSING > ${params.min_fraction_missing}' \
+            --soft-filter "F_MISSING_${params.min_fraction_missing}" \
+            -e "INFO/F_MISSING > ${params.min_fraction_missing}" \
             ${var_dir}/merged_variants.vcf.gz | \
         bcftools filter \
             --mode + \
-            --soft-filter 'ALT_IS_REF' \
-            -e 'ALT="."' | \
+            --soft-filter "ALT_IS_REF" \
+            -e "ALT='.'" | \
+        bcftools filter \
+            --mode + \
+            --soft-filter "PRIVATE" \
+            -e "INFO/AC=1" | \
         bcftools view -Oz -o ${var_dir}/annotated_variants.vcf.gz && \
         bcftools index -t ${var_dir}/annotated_variants.vcf.gz && \
         bcftools view -f PASS -Oz -o ${var_dir}/filtered_variants.vcf.gz \
