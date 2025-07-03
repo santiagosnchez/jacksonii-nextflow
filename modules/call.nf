@@ -14,10 +14,10 @@ process call_variants {
 
     script:
     """
-    mkdir -p ${params.var_dir}
+    mkdir -p ${params.var_dir}/gvcf
     ln -s "${params.genome_dir}/${ref_genome}.fai" .
     bam_file="bam/${sra_accession}_merged.bam"
-    if [[ ! -f ${params.var_dir}/${sra_accession}__raw_genotype_calls__SUCCESS ]]; then
+    if [[ ! -f ${params.var_dir}/gvcf/${sra_accession}__raw_genotype_calls__SUCCESS ]]; then
         freebayes \
             -f ${ref_genome} \
             --gvcf \
@@ -27,17 +27,17 @@ process call_variants {
             --limit-coverage ${params.limit_coverage} \
             --standard-filters \
             \$bam_file | \
-        bcftools sort -Oz -o ${params.var_dir}/${sra_accession}_raw_genotype_calls_sorted.gvcf.gz && \
-        bcftools index -t ${params.var_dir}/${sra_accession}_raw_genotype_calls_sorted.gvcf.gz && \
+        bcftools sort -Oz -o ${params.var_dir}/gvcf/${sra_accession}_raw_genotype_calls_sorted.gvcf.gz && \
+        bcftools index -t ${params.var_dir}/gvcf/${sra_accession}_raw_genotype_calls_sorted.gvcf.gz && \
         cp ${params.genome_dir}/${ref_genome}.fai ${params.var_dir}/ && \
-        echo "" > ${params.var_dir}/${sra_accession}__raw_genotype_calls__SUCCESS
+        echo "" > ${params.var_dir}/gvcf/${sra_accession}__raw_genotype_calls__SUCCESS
     fi
     """
 
     output:
     val true, emit: call_variants_success
-    path "${var_dir}/${sra_accession}_raw_genotype_calls_sorted.gvcf.gz", emit: raw_genotype_calls
-    path "${var_dir}/${sra_accession}_raw_genotype_calls_sorted.gvcf.gz.tbi", emit: raw_genotype_calls_tbi
+    path "${var_dir}/gvcf/${sra_accession}_raw_genotype_calls_sorted.gvcf.gz", emit: raw_genotype_calls
+    path "${var_dir}/gvcf/${sra_accession}_raw_genotype_calls_sorted.gvcf.gz.tbi", emit: raw_genotype_calls_tbi
 
 }
 
@@ -61,7 +61,7 @@ process merge_variants {
             -m all \
             -0 \
             --gvcf ${genome_dir}/reference.fasta \
-            ${var_dir}/*gvcf.gz | \
+            ${var_dir}/gvcf/*gvcf.gz | \
         bcftools view \
             -e 'ALT=\"<*>\" && N_ALT=1' --trim-alt | \
         bcftools +setGT -- -t q -n . -i 'FMT/DP=\".\"' | \
