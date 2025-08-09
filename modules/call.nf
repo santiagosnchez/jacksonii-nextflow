@@ -16,7 +16,7 @@ process call_variants {
     """
     mkdir -p ${params.var_dir}/gvcf
     ln -s "${params.genome_dir}/${ref_genome}.fai" .
-    bam_file="bam/${sra_accession}_merged.bam"
+    bam_file="bam/${sra_accession}_marked.bam"
     if [[ ! -f ${params.var_dir}/gvcf/${sra_accession}__raw_genotype_calls__SUCCESS ]]; then
         freebayes \
             -f ${ref_genome} \

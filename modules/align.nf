@@ -114,3 +114,36 @@ process merge_bam_files {
     path "${bam_dir}/${sra_accession}_merged.bam", emit: bam_file
 
 }
+
+process mark_duplicates {
+
+    container 'community.wave.seqera.io/library/bwa-mem2_htslib_samtools:e1f420694f8e42bd'
+
+    tag "align: $sra_accession"
+
+    input:
+    val merge_success
+    val sra_accession
+    path bam_dir
+    val threads
+
+    script:
+    """
+    if [[ ! -f ${bam_dir}/${sra_accession}__mark_duplicates__SUCCESS ]]; then
+        bam_file="${bam_dir}/${sra_accession}_merged.bam"
+        samtools sort -n -@ $threads \$bam_file -o name_sorted.bam && \
+        samtools fixmate -@ $threads -m name_sorted.bam fixed.bam && \
+        samtools sort -@ $threads fixed.bam -o sorted.bam && \
+        samtools markdup -@ $threads sorted.bam ${bam_dir}/${sra_accession}_marked.bam && \
+        samtools index ${bam_dir}/${sra_accession}_marked.bam && \
+        rm -f name_sorted.bam fixed.bam sorted.bam && \
+        echo "" > ${bam_dir}/${sra_accession}__mark_duplicates__SUCCESS
+    fi
+    """
+
+    output:
+    val true, emit: mark_duplicates_success
+    val sra_accession, emit: sra_accession
+    path "${bam_dir}/${sra_accession}_marked.bam", emit: marked_bam_file
+
+}

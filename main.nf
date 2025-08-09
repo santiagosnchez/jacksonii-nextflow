@@ -11,6 +11,7 @@ include { index_genome_samtools } from './modules/index.nf'
 include { run_bwa_mem_paired } from './modules/align.nf'
 include { run_bwa_mem_single } from './modules/align.nf'
 include { merge_bam_files } from './modules/align.nf'
+include { mark_duplicates } from './modules/align.nf'
 include { clear_fastq_reads } from './modules/clean.nf'
 include { call_variants } from './modules/call.nf'
 include { merge_variants } from './modules/call.nf'
@@ -78,6 +79,13 @@ workflow {
         params.bam_dir, 
         params.threads
     )
+    // mark duplicates
+    mark_duplicates(
+        merge_bam_files.out.merge_success,
+        merge_bam_files.out.sra_accession,
+        params.bam_dir,
+        params.threads
+    )
     // clean up FASTQ files
     clear_fastq_reads(
         merge_bam_files.out.merge_success,
@@ -86,7 +94,7 @@ workflow {
     )
     // call variants (this part is commented out in the original code)    
     call_variants(
-        merge_bam_files.out.sra_accession, 
+        mark_duplicates.out.sra_accession, 
         params.bam_dir, 
         params.var_dir, 
         index_genome_samtools.out.indexed_ref_genome
